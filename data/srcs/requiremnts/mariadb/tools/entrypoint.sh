@@ -30,4 +30,4 @@ EOF
     wait "$pid"
 fi
 
-exec mariadbd --user=mysql --datadir=/var/lib/mysql
+exec mariadbd --user=mysql --datadir=/var/lib/mysql --port=3306

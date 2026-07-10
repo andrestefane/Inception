@@ -30,8 +30,8 @@ if [ ! -f "/var/www/wordpress/wp-config.php" ]; then
         --allow-root
 
     wp user create \
-        ${MYSQL_USER} \
-        ${WP_ADMIN_EMAIL} \
+        ${WP_USER} \
+        ${WP_USER_EMAIL} \
         --role=author \
         --user_pass=${MYSQL_PASSWORD} \
         --path=/var/www/wordpress \

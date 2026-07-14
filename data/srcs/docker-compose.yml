@@ -62,6 +62,25 @@ services:
       - mariadb
     restart: on-failure
   
+  ftp:
+    build: ./requirements/bonus/ftp
+    container_name: ftp
+    env_file:
+      - .env
+    secrets:
+      - db_password
+    volumes:
+      - wordpress_data:/var/www/wordpress
+    networks:
+      - inception
+    ports:
+      - "20:20"
+      - "21:21"
+      - "21100-21110:21100-21110"
+    depends_on:
+      - wordpress
+    restart: no
+
 volumes:
   mariadb_data:
     driver: local

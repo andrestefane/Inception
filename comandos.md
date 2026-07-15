@@ -38,3 +38,9 @@ docker compose -f data/srcs/docker-compose.yml logs -f mariadb
 
 # para listar directamente sin entrar en wordpress
 docker exec wordpress wp user list --path=/var/www/wordpress --allow-root
+
+# probar ftp server
+ftp astefane.42.fr
+
+# probar redir
+docker exec -it redis redis-cli ping

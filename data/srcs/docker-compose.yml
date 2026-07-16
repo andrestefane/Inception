@@ -1,7 +1,7 @@
 services:
   mariadb:
     build: ./requirements/mariadb
-    container_name: mariadb
+    image: mariadb
     env_file:
       - .env
     secrets:
@@ -15,7 +15,7 @@ services:
 
   wordpress:
     build: ./requirements/wordpress
-    container_name: wordpress
+    image: wordpress
     env_file:
       - .env
     secrets:
@@ -32,7 +32,7 @@ services:
 
   nginx:
     build: ./requirements/nginx
-    container_name: nginx
+    image: nginx
     ports:
       - "443:443"
     volumes:
@@ -45,7 +45,7 @@ services:
 
   static:
     build: ./requirements/bonus/static
-    container_name: static
+    image: static
     networks:
       - inception
     ports:
@@ -54,7 +54,7 @@ services:
 
   adminer:
     build: ./requirements/bonus/adminer
-    container_name: adminer
+    image: adminer
     networks:
       - inception
     ports:
@@ -65,7 +65,7 @@ services:
 
   ftp:
     build: ./requirements/bonus/ftp
-    container_name: ftp
+    image: ftp
     env_file:
       - .env
     secrets:
@@ -80,18 +80,18 @@ services:
       - "21100-21110:21100-21110"
     depends_on:
       - wordpress
-    restart: no
+    restart: on-failure
 
   redis:
     build: ./requirements/bonus/redis
-    container_name: redis
+    image: redis
     networks:
       - inception
     restart: on-failure
 
   uptime:
     build: ./requirements/bonus/uptime
-    container_name: uptime
+    image: uptime
     volumes:
       - uptime_data:/app/data
     networks:

@@ -1,4 +1,6 @@
 secrets/
-srcs/.env
-mariadb/
-wordpress/
+data/srcs/.env
+
+data/mariadb/
+data/wordpress/
+data/uptime/

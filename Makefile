@@ -19,7 +19,6 @@ fclean: clean
 	docker compose -f $(COMPOSE_FILE) down -v
 	sudo rm -rf $(DATA_DIR)/mariadb/*
 	sudo rm -rf $(DATA_DIR)/wordpress/*
-	sudo rm -rf $(DATA_DIR)/uptime/*
 
 re: fclean all
 

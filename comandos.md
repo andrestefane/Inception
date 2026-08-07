@@ -43,7 +43,8 @@ docker exec wordpress wp user list --path=/var/www/wordpress --allow-root
 ftp astefane.42.fr
 
 # probar redis
-docker exec -it redis redis-cli ping
+docker compose -f data/srcs/docker-compose.yml exec redis redis-cli ping
+
 
 # ============================================================
 # NGINX

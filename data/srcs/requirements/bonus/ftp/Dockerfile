@@ -1,8 +1,11 @@
-FROM alpine:3.23.4
+FROM debian:bookworm-slim
 
-RUN apk add --no-cache vsftpd
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    vsftpd \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY conf/vsftpd.conf /etc/vsftpd/vsftpd.conf
+COPY conf/vsftpd.conf /etc/vsftpd.conf
 COPY tools/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh

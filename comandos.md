@@ -11,15 +11,13 @@ docker compose -f data/srcs/docker-compose.yml ps
 docker compose -f data/srcs/docker-compose.yml up --build mariadb
 
 # comprobar que mariadb se haya creado perfectamente.
-docker exec -it mariadb mariadb -u root -p -e "SELECT user, host FROM mysql.user;"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p -e "SELECT user, host FROM mysql.user;"
 
 
 # eliminar el volumen.
 docker compose -f data/srcs/docker-compose.yml down -v
 # tambien las imagines
 docker compose -f data/srcs/docker-compose.yml down -v --rmi all
-
-
 
 # verificar que todo se haya borrado
 docker ps -a
@@ -42,6 +40,8 @@ docker exec wordpress wp user list --path=/var/www/wordpress --allow-root
 # probar ftp server
 ftp astefane.42.fr
 
+get wp-config.php
+
 # probar redis
 docker compose -f data/srcs/docker-compose.yml exec redis redis-cli ping
 
@@ -54,17 +54,20 @@ docker compose -f data/srcs/docker-compose.yml exec redis redis-cli ping
 curl -vk https://astefane.42.fr
 
 # comprobar que no acepta conexiones sin TLS (puerto 80 no deberia responder en nginx)
+# desactivar primer el static del bonus, ya que usa http
+docker compose -f data/srcs/docker-compose.yml down static
+
 curl -k http://astefane.42.fr 2>&1 | head -5
 
 # verificar el certificado SSL generado
-docker exec nginx cat /etc/nginx/ssl/nginx.crt | openssl x509 -noout -subject -dates
+docker compose -f data/srcs/docker-compose.yml exec nginx cat /etc/nginx/ssl/nginx.crt | openssl x509 -noout -subject -dates
 
 # comprobar que solo se usa TLSv1.2 o TLSv1.3
 docker exec nginx openssl s_client -connect localhost:443 -tls1_2 < /dev/null 2>&1 | grep Protocol
 docker exec nginx openssl s_client -connect localhost:443 -tls1_3 < /dev/null 2>&1 | grep Protocol
 
 # comprobar la configuracion de nginx
-docker exec nginx cat /etc/nginx/nginx.conf
+docker compose -f data/srcs/docker-compose.yml exec nginx cat /etc/nginx/nginx.conf
 
 # comprobar logs de nginx
 docker compose -f data/srcs/docker-compose.yml logs -f nginx
@@ -77,16 +80,16 @@ docker compose -f data/srcs/docker-compose.yml logs -f nginx
 curl -vk https://astefane.42.fr | head -20
 
 # comprobar que php-fpm esta funcionando
-docker exec wordpress ps aux | grep php-fpm
+docker compose -f data/srcs/docker-compose.yml exec wordpress ps aux | grep php-fpm
 
 # comprobar que los archivos de wordpress existen en el volumen
-docker exec wordpress ls -la /var/www/wordpress/
+docker compose -f data/srcs/docker-compose.yml exec wordpress ls -la /var/www/wordpress/
 
 # listar los usuarios de wordpress
-docker exec wordpress wp user list --path=/var/www/wordpress --allow-root
+docker compose -f data/srcs/docker-compose.yml exec wordpress wp user list --path=/var/www/wordpress --allow-root
 
 # comprobar el wp-config.php (no debe contener passwords en texto plano)
-docker exec wordpress cat /var/www/wordpress/wp-config.php | grep -i "DB_PASSWORD\|DB_USER\|DB_NAME"
+docker compose -f data/srcs/docker-compose.yml exec wordpress cat /var/www/wordpress/wp-config.php | grep -i "DB_PASSWORD\|DB_USER\|DB_NAME"
 
 # comprobar logs de wordpress
 docker compose -f data/srcs/docker-compose.yml logs -f wordpress
@@ -96,19 +99,19 @@ docker compose -f data/srcs/docker-compose.yml logs -f wordpress
 # ============================================================
 
 # comprobar que mariadb esta corriendo
-docker exec mariadb mariadb -u root -p -e "SELECT VERSION();"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p -e "SELECT VERSION();"
 
 # listar los usuarios de la base de datos
-docker exec mariadb mariadb -u root -p -e "SELECT user, host FROM mysql.user;"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p -e "SELECT user, host FROM mysql.user;"
 
 # comprobar que existe la base de datos de wordpress
-docker exec mariadb mariadb -u root -p -e "SHOW DATABASES;"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p -e "SHOW DATABASES;"
 
 # comprobar que las tablas de wordpress se crearon
-docker exec mariadb mariadb -u root -p wordpress -e "SHOW TABLES;"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p wordpress -e "SHOW TABLES;"
 
 # comprobar que el usuario de wordpress tiene permisos
-docker exec mariadb mariadb -u root -p -e "SHOW GRANTS FOR 'wp_user'@'%';"
+docker compose -f data/srcs/docker-compose.yml exec mariadb mariadb -u root -p -e "SHOW GRANTS FOR 'wp_user'@'%';"
 
 # comprobar logs de mariadb
 docker compose -f data/srcs/docker-compose.yml logs -f mariadb
@@ -120,11 +123,15 @@ docker compose -f data/srcs/docker-compose.yml logs -f mariadb
 # comprobar que adminer responde
 curl -s http://localhost:8080 | head -5
 
+# comprobar la conectividad
+
+docker compose -f data/srcs/docker-compose.yml exec adminer ping -c 3 mariadb
+
 # comprobar logs de adminer
 docker compose -f data/srcs/docker-compose.yml logs -f adminer
 
 # ============================================================
-# STATIC SITE (sitio estatico)
+# STATIC SITE
 # ============================================================
 
 # comprobar que el sitio estatico responde

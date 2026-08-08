@@ -1,5 +1,3 @@
-secrets/
-data/srcs/.env
 
 data/mariadb/
 data/wordpress/

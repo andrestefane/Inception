@@ -1,5 +1,5 @@
-COMPOSE_FILE = data/srcs/docker-compose.yml
-DATA_DIR = /home/astefane/Inception/data
+COMPOSE_FILE = srcs/docker-compose.yml
+DATA_DIR = /home/astefane/data
 
 all: up
 

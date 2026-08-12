@@ -107,21 +107,21 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/astefane/Inception/data/mariadb
+      device: /home/astefane/data/mariadb
 
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/astefane/Inception/data/wordpress
+      device: /home/astefane/data/wordpress
 
   uptime_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/astefane/Inception/data/uptime
+      device: /home/astefane/data/uptime
 
 networks:
   inception:
@@ -129,8 +129,8 @@ networks:
 
 secrets:
   db_password:
-    file: ../../secrets/db_password.txt
+    file: ../secrets/db_password.txt
   db_root_password:
-    file: ../../secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt
   credentials:
-    file: ../../secrets/credentials.txt
+    file: ../secrets/credentials.txt

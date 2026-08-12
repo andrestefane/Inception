@@ -1,4 +1,1 @@
-
-data/mariadb/
-data/wordpress/
-data/uptime/
+secrets/

@@ -67,13 +67,13 @@ Environment variables are defined in `srcs/.env` and include the domain name, My
 To verify all containers are up and healthy:
 
 ```bash
-docker compose -f data/srcs/docker-compose.yml ps
+docker compose -f srcs/docker-compose.yml ps
 ```
 
 You should see all containers in "Up" or "running" state. You can also check individual logs:
 
 ```bash
-docker compose -f data/srcs/docker-compose.yml logs -f <service_name>
+docker compose -f srcs/docker-compose.yml logs -f <service_name>
 ```
 
 Replace `<service_name>` with `nginx`, `wordpress`, `mariadb`, `adminer`, `ftp`, `redis`, `static`, or `uptime`.

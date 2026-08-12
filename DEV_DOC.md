@@ -16,32 +16,28 @@ Inception/
 │   ├── credentials.txt
 │   ├── db_password.txt
 │   └── db_root_password.txt
-├── data/
-│   ├── mariadb/          # MariaDB persistent data
-│   ├── wordpress/        # WordPress persistent data
-│   ├── uptime/           # Uptime Kuma persistent data
-│   └── srcs/
-│       ├── docker-compose.yml
-│       ├── .env
-│       └── requirements/
-│           ├── nginx/
-│           │   ├── Dockerfile
-│           │   ├── conf/nginx.conf
-│           │   └── tools/entrypoint.sh
-│           ├── wordpress/
-│           │   ├── Dockerfile
-│           │   ├── conf/
-│           │   └── tools/
-│           ├── mariadb/
-│           │   ├── Dockerfile
-│           │   ├── conf/
-│           │   └── tools/
-│           └── bonus/
-│               ├── adminer/
-│               ├── ftp/
-│               ├── redis/
-│               ├── static/
-│               └── uptime/
+└── srcs/
+    ├── docker-compose.yml
+    ├── .env
+    └── requirements/
+        ├── nginx/
+        │   ├── Dockerfile
+        │   ├── conf/nginx.conf
+        │   └── tools/entrypoint.sh
+        ├── wordpress/
+        │   ├── Dockerfile
+        │   ├── conf/
+        │   └── tools/
+        ├── mariadb/
+        │   ├── Dockerfile
+        │   ├── conf/
+        │   └── tools/
+        └── bonus/
+            ├── adminer/
+            ├── ftp/
+            ├── redis/
+            ├── static/
+            └── uptime/
 ```
 
 ## Setting up from scratch
@@ -67,7 +63,7 @@ echo "your_credentials" > secrets/credentials.txt
 
 ### 3. Review environment variables
 
-Edit `data/srcs/.env` to configure domain, database, and user settings:
+Edit `srcs/.env` to configure domain, database, and user settings:
 
 ```
 DOMAIN_NAME=astefane.42.fr
@@ -89,7 +85,7 @@ Build all images and start all containers:
 make up
 ```
 
-This runs `docker compose up -d --build` against `data/srcs/docker-compose.yml`.
+This runs `docker compose up -d --build` against `srcs/docker-compose.yml`.
 
 ## Managing containers
 
@@ -105,16 +101,16 @@ This runs `docker compose up -d --build` against `data/srcs/docker-compose.yml`.
 
 ```bash
 # Check container status
-docker compose -f data/srcs/docker-compose.yml ps
+docker compose -f srcs/docker-compose.yml ps
 
 # View logs for a specific service
-docker compose -f data/srcs/docker-compose.yml logs -f nginx
+docker compose -f srcs/docker-compose.yml logs -f nginx
 
 # Restart a single service
-docker compose -f data/srcs/docker-compose.yml restart wordpress
+docker compose -f srcs/docker-compose.yml restart wordpress
 
 # Rebuild a single service
-docker compose -f data/srcs/docker-compose.yml up -d --build nginx
+docker compose -f srcs/docker-compose.yml up -d --build nginx
 ```
 
 ## Managing volumes
@@ -137,7 +133,7 @@ docker volume ls
 docker volume inspect inception_mariadb_data
 
 # Remove all volumes
-docker compose -f data/srcs/docker-compose.yml down -v
+docker compose -f srcs/docker-compose.yml down -v
 ```
 
 ### Data persistence
@@ -163,11 +159,11 @@ Secrets are managed via Docker secrets (not environment variables). The files ar
 ```yaml
 secrets:
   db_password:
-    file: ../../secrets/db_password.txt
+    file: ../secrets/db_password.txt
   db_root_password:
-    file: ../../secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt
   credentials:
-    file: ../../secrets/credentials.txt
+    file: ../secrets/credentials.txt
 ```
 
 Inside containers, secrets are accessible at `/run/secrets/<secret_name>`.

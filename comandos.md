@@ -24,6 +24,17 @@ docker ps -a
 docker volume ls
 docker network ls    
 
+# comprobar que todo se haya borrado correctamente
+
+[ -n "$(docker ps -qa)" ] && docker stop $(docker ps -qa)
+[ -n "$(docker ps -qa)" ] && docker rm $(docker ps -qa)
+[ -n "$(docker images -qa)" ] && docker rmi -f $(docker images -qa)
+[ -n "$(docker volume ls -q)" ] && docker volume rm $(docker volume ls -q)
+[ -n "$(docker network ls -q)" ] && docker network rm $(docker network ls -q) 2>/dev/null
+
+docker system prune -a --volumes -f
+
+
 # montar todo
 docker compose -f srcs/docker-compose.yml up -d --build
 
@@ -123,6 +134,11 @@ docker compose -f srcs/docker-compose.yml logs -f mariadb
 # comprobar que adminer responde
 curl -s http://localhost:8080 | head -5
 
+mariadb
+wp_user
+holahola123123
+wordpress
+
 # comprobar la conectividad
 
 docker compose -f srcs/docker-compose.yml exec adminer ping -c 3 mariadb
@@ -149,6 +165,9 @@ docker exec ftp ps aux | grep vsftpd
 
 # probar conexion FTP (usar tu usuario y password)
 ftp astefane.42.fr
+
+put para subir archivo
+get para bajar archivo
 
 # comprobar logs de ftp
 docker compose -f srcs/docker-compose.yml logs -f ftp
@@ -200,10 +219,10 @@ ls -la /home/astefane/data/uptime/
 docker network ls
 
 # inspeccionar la red inception
-docker network inspect inception
+docker network inspect srcs_inception
 
 # comprobar que los contenedores estan conectados a la red inception
-docker network inspect inception | grep -A 2 "Name"
+docker network inspect srcs_inception | grep -A 2 "Name"
 
 # ============================================================
 # SECRETS
